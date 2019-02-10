@@ -41,7 +41,6 @@ long Locbit = LLITOUT;	/* Bit SUPPOSED to disable output translations */
 #endif
 
 #include <sys/ioctl.h>
-#include <sys/sysmacros.h>
 
 static struct {
 	unsigned baudr;

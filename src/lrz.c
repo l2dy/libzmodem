@@ -46,7 +46,7 @@
 
 #define MAX_BLOCK 8192
 
-const char *program_name;		/* the name by which we were called */
+const char *lrz_program_name;		/* the name by which we were called */
 
 static int no_timeout=FALSE;
 
@@ -299,7 +299,7 @@ rz_receive(rz_t *rz)
 	zi.bytes_skipped=0;
 	zi.eof_seen=0;
 
-	log_info(_("%s waiting to receive."), program_name);
+	log_info(_("%s waiting to receive."), lrz_program_name);
 	c = 0;
 	c = rz_zmodem_session_startup(rz);
 	if (c != 0) {
@@ -346,7 +346,7 @@ fubar:
 
 	if (rz->restricted && rz->pathname) {
 		unlink(rz->pathname);
-		log_info(_("%s: %s removed."), program_name, rz->pathname);
+		log_info(_("%s: %s removed."), lrz_program_name, rz->pathname);
 	}
 	return ERROR;
 }
@@ -719,7 +719,7 @@ rz_process_header(rz_t *rz, char *name, struct zm_fileinfo *zi)
 			log_fatal(_("out of memory"));
 			exit(1);
 		}
-		sprintf(rz->pathname, "%s %s", program_name+2, name_static);
+		sprintf(rz->pathname, "%s %s", lrz_program_name+2, name_static);
 		log_info("%s: %s %s",
 			 _("Topipe"),
 			 rz->pathname, rz->thisbinary?"BIN":"ASCII");
@@ -884,7 +884,7 @@ chkinvok(const char *s, int *ptopipe)
 	//if (*s == 'v') {
 	//	Verbose=LOG_INFO; ++s;
 	//}
-	program_name = s;
+	lrz_program_name = s;
 	if (*s == 'l')
 		s++; /* lrz -> rz */
 	if (s[2])
@@ -909,7 +909,7 @@ rz_checkpath(rz_t *rz, const char *name)
 		if ((rz->restricted==2 || *name=='.') && fopen(name, "r") != NULL) {
 			zreadline_canit(rz->zm->zr, STDOUT_FILENO);
 			log_info(_("%s: %s exists"),
-				program_name, name);
+				lrz_program_name, name);
 			bibi(-1);
 		}
 		/* restrict pathnames to current tree or uucppublic */
@@ -920,13 +920,13 @@ rz_checkpath(rz_t *rz, const char *name)
 #endif
 		) {
 			zreadline_canit(rz->zm->zr, STDOUT_FILENO);
-			log_info(_("%s: Security Violation"),program_name);
+			log_info(_("%s: Security Violation"),lrz_program_name);
 			bibi(-1);
 		}
 		if (rz->restricted > 1) {
 			if (name[0]=='.' || strstr(name,"/.")) {
 				zreadline_canit(rz->zm->zr, STDOUT_FILENO);
-				log_info(_("%s: Security Violation"),program_name);
+				log_info(_("%s: Security Violation"),lrz_program_name);
 				bibi(-1);
 			}
 		}
